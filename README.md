@@ -43,4 +43,4 @@ genealogical concordance phylogenetic species recognition method.
 
 To run both steps with a minimal support of two
 
-    ./concordance_non-discordance.pl -min=2 *.nwk | exhaustive_subdivision.pl  >gcpsr.nwk
+    ./concordance_non-discordance.pl -min=2 *.nwk | ./exhaustive_subdivision.pl - >gcpsr.nwk
