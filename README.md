@@ -38,3 +38,9 @@ genealogical concordance phylogenetic species recognition method.
     - Exhaustive subdivision:
 
         All individuals have to be placed within a phylogenetic species.
+
+## Perl scripts
+
+To run both steps with a minimal support of two
+
+    ./concordance_non-discordance.pl -min=2 *.nwk | exhaustive_subdivision.pl  >gcpsr.nwk
