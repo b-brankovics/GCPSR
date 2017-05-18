@@ -54,7 +54,7 @@ for (keys %$clades_h) {
     $clade_ids{$_}++;
 }
 
-# Exhaustive subdivision
+# Exhaustive subdivision (returns the clade ids that are kept)
 my $final = &sub_div($allids, \%clade_ids, $clades_h, $clades_c);
 
 # Print final newick tree
@@ -63,18 +63,37 @@ print "(" . &create_tree($allids, $final, $clades_h, $clades_c) . ");\n";
 #=============Subroutines================================================
 sub sub_div{
     # Exhaustive subdivision
+    #    Classifies each strain into a phylogenetic species
+    #    Find the smallest clade with sufficient support that contains the strain
+    #    Remove all subclades of such clades
     # Inputs are hash references:
     # strain ids, clade id numbers, clade hash (id->array of members), clade support hash
     my ($names, $ids, $clade, $count) = @_;
-    for my $id (keys %$names) {
+    RANK: for my $id (sort keys %$names) {
 	# Get the smallest clade that contains the strain
-	my ($now) = grep{my $get; for (@{ $clade->{$_} }){$get++ if $id eq $_}; $get} sort{scalar(@{ $clade->{$a} })<=>scalar(@{ $clade->{$b} })} keys %$ids;
+	my ($now) = grep{ # only clades that contain the strain
+	                   my $get;
+                           for (@{ $clade->{$_} }){
+                             $get++ if $id eq $_
+                           };
+                           $get
+                         } sort{ # sort clades based on number of strains; ascending
+                                  scalar(@{ $clade->{$a} }) <=> scalar(@{ $clade->{$b} })
+                                } keys %$ids;
+	# If there are no clades (left) containing the strain return NULL
+	return unless $now;
 	# Remove all subclades of this clade
 	for (keys %$ids) {
-	    next if $now eq $_;
+	    next if $now eq $_; # skip if it is the selected clade
 	    if (&is_subset($clade->{$_}, $clade->{$now})){
 		delete $ids->{$_};
 	    }
+	}
+	# Check that it has sufficient support 
+	if ($count->{$now} < $min && scalar keys %$ids > 1) {
+	    # Remove the clade and search for the smallest clade containing the strain
+	    delete $ids->{$now};
+	    redo RANK;
 	}
     }
     return $ids;
