@@ -6,16 +6,52 @@ use Bio::TreeIO;
 # Number the clades
 my $clade_count = 0;
 # Store the members of the clades and the support
-my $clades_h = {};
-my $clades_c = {};
+my $clades_h = {}; # clades hash: id -> array (strain ids) ref
+my $clades_c = {}; # clades count: id -> count/frequency
 # Store the strain ids
 my $allids = {};
 
 # Deafult minimum support for clades to be kept
-my $min = 1;
+my $min_sup = 95;
+# Deafult minimum count/frequency for clades to be kept
+my $min_count = 2;
 
-# Process the input
-for (@ARGV) {
+# Get parameters for min count and support
+my ($sup_par) = grep{/^-min=(\d+(:?\.\d+)?)$/} @ARGV;
+if ($sup_par) {
+    $sup_par =~ /^-min=(\d+(:?\.\d+)?)$/;
+    $min_sup = $1;
+}
+my ($count_par) = grep{/^-count=(\d+)$/} @ARGV;
+if ($count_par) {
+    $count_par =~ /^-count=(\d+)$/;
+    $min_count = $1;
+}
+
+# Test for arguments that won't be processed
+my @not_used = grep{$_ !~ /^-min=(\d+(:?\.\d+)?)$/} grep{$_ !~ /^-count=(\d+)$/} grep{$_ !~ /\.nwk$/} grep{$_ !~ /\.nex\.\S+\.t(re)$/} @ARGV;
+if (@not_used) {
+    for (@not_used) {
+	if (/^(-)?-h(elp)?$/) {
+	    last;
+	} elsif ("-" eq $_) {
+	    print{*STDERR} "$0 cannot read trees from STDIN (standard input).\n";
+	}
+	print{*STDERR} "'$_' is an incorrect argument\n";
+    }
+    die "Usage:\n\t$0 [-h | --help] [-min=<num>] [-count=<int>] tree1 tree2 ...\n" .
+	"Description:\n\tA tool to implement the concordance and non-discordance analysis of GCPSR sensu Brankovics et al. 2017\n" .
+	"Input:\t(tree1, tree2, ...)\n" .
+	"\tMajority-rule concensus tree files in either newick or nexus format with bootstrap or Bayesian posterior probabilty support.\n" .
+	"\tEach locus should have a separate tree and each files should contain only one tree.\n" .
+	"Options:\n" .
+	"\t-h | --help\n\t\tPrint the help message; ignore other arguments.\n" .
+	"\t-min=<num>\n\t\tAll clades that have support values (BS or BPP) lower then <num> will be skipped. (Default: 95)\n" .
+	"\t-count=<int>\n\t\tAll clades that are present in less then <int> majority-rule concensus trees will not be considered concordant. (Default: 2)" .
+	"\n";
+}
+# Process the input files
+for (grep{/\.nwk$/ || /\.nex\.\S+\.t(re)$/} @ARGV) {
     my $input;
     # Open trees or store minsupport value
     if (/\.nwk$/) {
@@ -24,8 +60,6 @@ for (@ARGV) {
     } elsif (/\.nex\.\S+\.t(re)$/) {
 	$input = new Bio::TreeIO(-file   => $_,
 				 -format => "nexus");
-    } elsif (/^-min=(\d+)$/) {
-	$min = $1;
     }
     # Read the tree in the file
     next unless $input;
@@ -48,11 +82,11 @@ for my $i (keys %$clades_h) {
     my $con;
     # Get support of the clade
     my $sup1 = $clades_c->{$i};
-    next unless $sup1 >= $min; # Clade will not be kept
+    next unless $sup1 >= $min_count; # Clade will not be kept
     for my $j (keys %$clades_h) {
 	# Get support of the other clade
 	my $sup2 = $clades_c->{$j};
-	next unless $sup2 >= $min; # $sup1;
+	next unless $sup2 >= $min_count; # $sup1;
 	# Test if there is a conflict
 	if ( &conflict($clades_h->{$i}, $clades_h->{$j}) ) {
 	    $con++;
@@ -156,7 +190,7 @@ sub find_high_support{
 	next if $n->is_Leaf;
 	# Get support value if it exists
 	my $value = &get_id($n);
-	if ($value && $value >= 95 && $value <= 100) {
+	if ($value && $value >= $min_sup) {
 	    # Get clade members, add to hash
 	    my $new++;
 	    my @clade = get_children($n);
