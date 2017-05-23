@@ -14,6 +14,35 @@ my $allids = {};
 
 # Deafult minimum support for clades to be kept
 my $min = 1;
+my ($count_par) = grep{/^-count=(\d+)$/} @ARGV;
+if ($count_par) {
+    $count_par =~ /^-count=(\d+)$/;
+    $min = $1;
+}
+
+# Test for arguments that won't be processed
+my @not_used = grep{$_ ne "-"} grep{$_ !~ /^-count=(\d+)$/} grep{$_ !~ /\.nwk$/} grep{$_ !~ /\.nex\.\S+\.t(re)$/} @ARGV;
+if (@not_used) {
+    for (@not_used) {
+	if (/^(-)?-h(elp)?$/) {
+	    last;
+	}
+	print{*STDERR} "'$_' is an incorrect argument\n";
+    }
+    die "Usage:\n\t$0 [-h | --help] [-count=<int>] tree\n" .
+	"Description:\n\tA tool to implement the exhaustive subdivision analysis of GCPSR sensu Brankovics et al. 2017\n" .
+	"Input:\ttree\n" .
+	"\tTree file produced by the concordance and non-discordance analysis of GCPSR sensu Brankovics et al. 2017.\n" .
+	"\tTree file in either newick or nexus format with the number of single locus trees supporting a clade as support values.\n" .
+	"\tThe input is either read from the specified file or from the STDIN (standard input) if '-' was specified as tree.\n" .
+	"Options:\n" .
+	"\t-h | --help\n\t\tPrint the help message; ignore other arguments.\n" .
+	"\t-count=<int>\n\t\tAll clades that are supported by less then <int> majority-rule concensus trees\n" .
+	"\t\t(support value in the tree file) will not be considered as phylogenetic species. (Default: 1)\n" .
+	"\n";
+}
+
+
 
 # Process the input
 for (@ARGV) {
@@ -28,8 +57,6 @@ for (@ARGV) {
     } elsif ("-" eq $_) {
 	$input = new Bio::TreeIO(-fh   => \*STDIN,
 				 -format => "newick");
-    } elsif (/^-min=(\d+)$/) {
-	$min = $1;
     }
     # Read the tree in the file
     next unless $input;
