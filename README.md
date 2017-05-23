@@ -61,8 +61,8 @@ and classifies all the individuals/strains into well (defined by
 
 Specified by `-min=<int>` using
 `concordance_non-discordance.pl`. Default value is **95**.
-Recommended value for tree with bootstrap support at least **80**, for
-Bayesian posterior probability **0.95** (or **95** in percentage
+Recommended value for trees with bootstrap support at least is **80**,
+for trees with Bayesian posterior probability **0.95** (or **95** in percentage
 representation).
 
 Ensures that only highly supported clades are recognized as concordant
@@ -77,10 +77,10 @@ It is recommended to keep this value as low as possible.
 Ensures that only those clades have to be compared for discordance
 that are concordant through multiple single locus phylogenies. This is
 needed when analyzing large numbers of loci for which we do not know
-whether they are under _balancing selection_ or other influence that
+whether they are under _balancing selection_ or other influences that
 would compromise phylogenetic species recognition. Before identifying
 definitive phylogenetic species all trees that suggest conflicting
-groupings should be carefully analyzed why they should be ignored
+groupings, should be carefully analyzed why they should be _"ignored"_
 (e.g. mating type loci and TRI gene cluster in _Fusarium graminearum_
 species complex are under balancing selection; or if the locus is
 difficult to align, which produces uncertainty in the correct homology
