@@ -3,44 +3,53 @@
 This package contains perl scripts for the implementation of the
 genealogical concordance phylogenetic species recognition method.
 
-## GCPSR _sensu_ [Dettman _et al._ (2003)](http://dx.doi.org/10.1554/03-073)
+## Prerequisites
 
-1. Grouping of individuals
+You need to have perl 5 on your computer (on Mac and Linux this is by
+default installed).
 
-    A clade is recognized as an independent evolutionary lineage if
-    it satisfied either of two criteria:
+The scripts in this repository use the `Bio::Tree::Tree` package.
 
-    - Genealogical concordance:
-
-        The clade is present in the majority of the
-        single-locus genealogies.
-
-    - Genealogical nondiscordance:
-
-        The clade is well supported in at least one single-locus
-        genealogy, as judged by both MP bootstrap proportions
-        and Bayesian posterior probabilities, and is not
-        contradicted in any other single-locus genealogy at the same
-        level of support.
-
-2. Ranking of groups
-
-    This steps identifies which independent evolutionary lineages
-    could be considered as phylogenetic species.
-	Two ranking criteria were applied:
-
-    - Genetic differentiation
-
-        To prevent minor tip clades from being recognized,
-        phylogenetic species have to be relatively distinct and well
-        differentiated from other species.
-
-    - Exhaustive subdivision:
-
-        All individuals have to be placed within a phylogenetic species.
+    # To install using cpan
+    cpan Bio::Tree::Tree
 
 ## Perl scripts
 
+To print the usage information for the scripts, run
+
+    perl concordance_non-discordance.pl -h
+
+and
+
+    perl exhaustive_subdivision.pl -h
+
 To run both steps with a minimal support of two
 
-    ./concordance_non-discordance.pl -min=2 *.nwk | ./exhaustive_subdivision.pl - >gcpsr.nwk
+    ./concordance_non-discordance.pl -count=2 *.nwk | ./exhaustive_subdivision.pl - >gcpsr.nwk
+
+### Step 1: Concordance and non-discordance analysis
+
+The script `concordance_non-discordance.pl` takes **newick** or
+**nexus** tree files (_one tree per file!_) as input and outputs a
+tree by keeping clades that are highly supported by single gene trees
+and are not conflicting with other clades with the same level of
+support.
+
+The script has two parameters: the minimum support value
+(`-min=<int>`) to keep a clade as a potential concordant clade and the
+minimum number (`-count=<int>`) of single gene trees containing the
+given clade with sufficient support. (Default values are `-min=95` and
+`-count=1`: a clade has at least **95** as support value and is found
+in at least **1** of the trees with that support.)
+
+### Step 2. Exhaustive subdivision
+
+The script `exhaustive_subdivision.pl` takes a single **newick** or
+**nexus** tree as input and does the exhaustive subdivision analysis
+and classifies all the individuals/strains into well (defined by
+`-count=<int>`) supported phylogenetic species.
+
+## Theory behind this method
+
+You can read more about the underlying theory in the (md/theory.md)
+file.
