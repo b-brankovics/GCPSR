@@ -51,6 +51,7 @@ set:
 - PS1: (A,B,C)
 - PS2: (D,E)
 - PS3: (F,G)
+
 Because these clades were highly supported (>= 95) in at least 3
 single locus phylogenies (out of the 4). Since a clade was only
 considered as concordant if it is supported by at least two trees,
