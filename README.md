@@ -27,6 +27,37 @@ To run both steps with a minimal support of two
 
     ./concordance_non-discordance.pl -count=2 *.nwk | ./exhaustive_subdivision.pl - -count=2 >gcpsr.nwk
 
+Example analyses using 4 test tree files:
+
+    ./concordance_non-discordance.pl  files-for-testing/* -min=95 -count=1 | ./exhaustive_subdivision.pl - -count=3
+
+This analysis recognizes three phylogenetic species in the test data
+set:
+- outgroup: (X,Y)
+- PS1: (A,B,C)
+- PS2: (D,E,F,G)
+
+Because these clades were highly supported (>= 95) in at least 3
+single locus phylogenies (out of the 4). Although, both (D,E) and
+(F,G) clades were highly supported in 3 trees these are removed,
+because the following clades (D,F) and (E,G) were also highly
+supported that were in conflict with clades (D,E) and (F,G).
+
+    ./concordance_non-discordance.pl  files-for-testing/* -min=95 -count=2 | ./exhaustive_subdivision.pl - -count=3
+
+This analysis recognizes three phylogenetic species in the test data
+set:
+- outgroup: (X,Y)
+- PS1: (A,B,C)
+- PS2: (D,E)
+- PS3: (F,G)
+Because these clades were highly supported (>= 95) in at least 3
+single locus phylogenies (out of the 4). Since a clade was only
+considered as concordant if it is supported by at least two trees,
+clades were (D,E) and (F,G) were not contradicted by other concordant
+clades.
+
+
 ### Step 1: Concordance and non-discordance analysis
 
 The script `concordance_non-discordance.pl` takes **newick** or
