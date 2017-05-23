@@ -25,7 +25,7 @@ and
 
 To run both steps with a minimal support of two
 
-    ./concordance_non-discordance.pl -count=2 *.nwk | ./exhaustive_subdivision.pl - >gcpsr.nwk
+    ./concordance_non-discordance.pl -count=2 *.nwk | ./exhaustive_subdivision.pl - -count=2 >gcpsr.nwk
 
 ### Step 1: Concordance and non-discordance analysis
 
