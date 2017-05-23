@@ -51,5 +51,5 @@ and classifies all the individuals/strains into well (defined by
 
 ## Theory behind this method
 
-You can read more about the underlying theory in the [md/theory.md]
+You can read more about the underlying theory in the [md/theory.md](md/theory.md)
 file.
