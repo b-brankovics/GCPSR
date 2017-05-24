@@ -190,7 +190,9 @@ sub find_high_support{
 	next if $n->is_Leaf;
 	# Get support value if it exists
 	my $value = &get_id($n);
-	if ($value && $value >= $min_sup) {
+	# If there is no min_sup then keep all
+	#   else keep only well supported clades
+	if (!$min_sup || ($value && $value >= $min_sup)) {
 	    # Get clade members, add to hash
 	    my $new++;
 	    my @clade = get_children($n);
