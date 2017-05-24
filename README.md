@@ -185,10 +185,11 @@ phylogenetic species tree is printed in newick format to the STDOUT
 
 ### Phase 1: looking for dominant/general trends
 
-The first question, whether there are multiple loci support the
+The first question, whether there are multiple loci supporting the
 separation of the species in your data.
 
-For this you can use a relatively large concordance cutoff, so a small
+For this you can use a relatively large concordance cutoff
+(`-count=<int>`, first script), so a small
 number of conflicting loci do not destroy your general pattern.
 
 ### Phase 2: find which loci are in conflict with the general pattern
