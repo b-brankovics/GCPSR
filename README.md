@@ -13,6 +13,22 @@ The scripts in this repository use the `Bio::Tree::Tree` package.
     # To install using cpan
     cpan Bio::Tree::Tree
 
+## Data preprocessing 
+
+It is important to ensure that the right input trees are used for the
+GCPSR analysis. The majority-rule consensus trees produced from single
+locus phylogenies have to meet the following requirements:
+- Trees are rooted using the same outgroup
+- The outgroup contains at least two strains
+- The clades have bootstrap (BS) or Bayesian posterior probability
+  (BPP) support values 
+- Support values appear as internal node names
+  (e.g. _(((A,B)**80**,(C,D)**92**)**100**,(X,Y)**100**)_ or with
+  branch lengths: _(((A:0.03,B:0.02)**80**:0.07,(C:0.04,D:0.01)**92**:0.05)**100**:0.10,(X:0.07,Y:0.04)**100**:0.2)_)
+- Trees are in either **newick** ("`*.nwk`") or **nexus**
+  ("`*.nex.*.t`" or "`*.nex.*.tre`") format and have one of the file
+  extensions recognized by the scripts
+
 ## Perl scripts
 
 To print the usage information for the scripts, run
