@@ -214,7 +214,7 @@ extension):
 Examine all the conflicting loci and try to identify why they are
 showing a conflict. Could it be that they are under balancing
 selection, which helps maintain ancestral polymorphism even through
-speciation, blocking lineage sorting. Lineage sorting is the one of
+speciation, blocking lineage sorting. Lineage sorting is one of
 the phenomenon that GCPSR is exploiting. Another option could be that
 the locus has an unreliable alignment, which produces a tree with high
 support, but should not be considered as a reliable tree. (Tree
