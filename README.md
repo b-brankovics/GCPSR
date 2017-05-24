@@ -237,6 +237,10 @@ step. For the second script use `-count=<int>` where `<int>` should be
 a number representing the majority of single locus gene trees used
 (e.g. 6 out of 10, so `-count=6`).
 
+> This last part on the majority of loci supporting the separation,
+> assumes that all the loci used for this analysis are relatively
+> informative, which is not always the case.
+
 The final result contains the phylogenetic species identified in your
 data set.
 
