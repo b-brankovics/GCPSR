@@ -87,7 +87,7 @@ or phylogenetic species.
 #### Concordance cutoff
 
 Specified by `-count=<init>` using
-`concordance_non-discordance.pl`. Default value is **1**.
+`concordance_non-discordance.pl`. Default value is **2**.
 It is recommended to keep this value as low as possible.
 
 Ensures that only those clades have to be compared for discordance
@@ -180,6 +180,64 @@ containing the given clade with at least the minimum support values.
 After all strains are placed into the least inclusive clade, the
 phylogenetic species tree is printed in newick format to the STDOUT
 (standard output).
+
+## How to use this method for phylogenetic species recognition
+
+### Phase 1: looking for dominant/general trends
+
+The first question, whether there are multiple loci support the
+separation of the species in your data.
+
+For this you can use a relatively large concordance cutoff, so a small
+number of conflicting loci do not destroy your general pattern.
+
+### Phase 2: find which loci are in conflict with the general pattern
+
+First, save the the result of the analysis in phase 1 to a file
+(e.g. `trend.nwk`). This after using a relatively large concordance
+cutoff for the first script and using that result for exhaustive
+subdivision. This result contains potential phylogenetic species.
+
+Check whether you get the same result if you set concordance cutoff to
+1 (`-count=1`).
+
+If not, then you have gene trees that contradict the general
+trend/pattern in your data set (gene tree forest). These should be
+identified. To do this, use the following command (this assumes that
+the reference tree is `trend.nwk` and all the individual single locus
+trees are in the `single_locus_phylogenies` folder and have the `.nwk`
+extension):
+
+    perl find_conflicting_tree.pl -ref=trend.nwk single_locus_phylogenies/*.nwk
+
+Examine all the conflicting loci and try to identify why they are
+showing a conflict. Could it be that they are under balancing
+selection, which helps maintain ancestral polymorphism even through
+speciation, blocking lineage sorting. Lineage sorting is the one of
+the phenomenon that GCPSR is exploiting. Another option could be that
+the locus has an unreliable alignment, which produces a tree with high
+support, but should not be considered as a reliable tree. (Tree
+estimation is based on assuming homologous relationship between
+nucleotides in the same column in the alignments. If the alignment is
+incorrect, then the tree does not reflect evolutionary relation, but
+the error itself.)
+
+Some conflicts are not under these influences and demonstrate true
+discordance. Discordance indicates that we are examining below the
+phylogenetic species level. "_The transition from concordance among
+branches to incongruity among branches can be used to diagnose
+species._" ([Taylor, J. W., Jacobson, D. J., Kroken, S., Kasuga, T., Geiser, D. M., Hibett, D. S., and Fisher, M. C. 2000. Phylogenetic species recognition and species concepts in fungi. _Fungal Genetics and Biology_ 31, 21–32.)](http://taylorlab.berkeley.edu/sites/default/files/taylorlab/publications/taylor2000.pdf)
+
+### Phase 3: final analysis on the refined locus set
+
+If all conflicting trees could be reasoned away, then run the analysis
+once again on the trees that are kept with `-count=1` for the first
+step. For the second script use `-count=<int>` where `<int>` should be
+a number representing the majority of single locus gene trees used
+(e.g. 6 out of 10, so `-count=6`).
+
+The final result contains the phylogenetic species identified in your
+data set.
 
 
 ## Theory behind this method
