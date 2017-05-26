@@ -77,7 +77,7 @@ and classifies all the individuals/strains into well (defined by
 
 Specified by `-min=<int>` using
 `concordance_non-discordance.pl`. Default value is **95**.
-Recommended value for trees with bootstrap support at least is **80**,
+Recommended value for trees with bootstrap support at least is **70**,
 for trees with Bayesian posterior probability **0.95** (or **95** in percentage
 representation).
 
@@ -169,7 +169,7 @@ containing the given clade with at least the minimum support values.
 ### Step 2. (Exhaustive subdivision)
 1. The tree produced by step one is screened for clades with high the
    high support (_support_ >= `<int>`, `<int>` comes from
-   `-count=<int>` argument). This is the cutoff value for recognizing
+   `-count=<int>` argument). This is the threshold value for recognizing
    a concordant clade as a phylogenetic species.
 2. Each individual/strain is placed into a potential phylogenetic
    species that has the fewest members (smallest clade) and includes
@@ -189,7 +189,7 @@ phylogenetic species tree is printed in newick format to the STDOUT
 The first question, whether there are multiple loci supporting the
 separation of the species in your data.
 
-For this you can use a relatively large concordance cutoff
+For this you can use a relatively large discordance threshold
 (`-count=<int>`, first script), so a small
 number of conflicting loci do not destroy your general pattern.
 
@@ -197,10 +197,10 @@ number of conflicting loci do not destroy your general pattern.
 
 First, save the the result of the analysis in phase 1 to a file
 (e.g. `trend.nwk`). This after using a relatively large concordance
-cutoff for the first script and using that result for exhaustive
+threshold for the first script and using that result for exhaustive
 subdivision. This result contains potential phylogenetic species.
 
-Check whether you get the same result if you set concordance cutoff to
+Check whether you get the same result if you set discordance threshold to
 1 (`-count=1`).
 
 If not, then you have gene trees that contradict the general
