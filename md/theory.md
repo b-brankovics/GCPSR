@@ -24,7 +24,7 @@ to be due to recombination among individuals within a species, and the transitio
 from concordance to conflict determines the limits of species (Fig. 2)." -
 [Taylor _et al._ (2000)]((http://dx.doi.org/10.1006/fgbi.2000.1228)
 
-![Fig. 2](md/figures/Transition.png)
+![Fig. 2](figures/Transition.png)
 **Fig. 2.** Simultaneous analysis of three gene genealogies shows how the transition from concordance among branches to incongruity among branches can be used to diagnose species. -
 [Taylor _et al._ (2000)]((http://dx.doi.org/10.1006/fgbi.2000.1228)
 
