@@ -2,6 +2,17 @@
 
 This package contains perl scripts for the implementation of the
 genealogical concordance phylogenetic species recognition method.
+The detailed description of the algorithm, its implementation and recommendations
+are published as **Additional file 2** in [Brankovics, B., van Dam, P., Rep, M.,  de Hoog, G.S., van der Lee, T.A.J., Waalwijk, C. and van Diepeningen, A.D. **Mitochondrial genomes reveal recombination in the presumed asexual _Fusarium oxysporum_ species complex.** _BMC Genomics_ (2017) 18: 735. doi: 10.1186/s12864-017-4116-5](https://doi.org/10.1186/s12864-017-4116-5)
+
+## Theory behind this method
+
+A brief theoretical background for GCPSR is included in this repository
+(see [md/theory.md](md/theory.md)).
+You can find more information in the main text of the
+[publication](https://doi.org/10.1186/s12864-017-4116-5), in **Addtional file 2**
+and the articled referred to by this repository and by the
+[publication](https://doi.org/10.1186/s12864-017-4116-5).
 
 ## Prerequisites
 
@@ -13,7 +24,7 @@ The scripts in this repository use the `Bio::Tree::Tree` package.
     # To install using cpan
     cpan Bio::Tree::Tree
 
-## Data preprocessing 
+## Data preprocessing
 
 It is important to ensure that the right input trees are used for the
 GCPSR analysis. The majority-rule consensus trees produced from single
@@ -21,7 +32,7 @@ locus phylogenies have to meet the following requirements:
 - Trees are rooted using the same outgroup
 - The outgroup contains at least two strains
 - The clades have bootstrap (BS) or Bayesian posterior probability
-  (BPP) support values 
+  (BPP) support values
 - Support values appear as internal node names
   (e.g. _(((A,B)**80**,(C,D)**92**)**100**,(X,Y)**100**)_ or with
   branch lengths: _(((A:0.03,B:0.02)**80**:0.07,(C:0.04,D:0.01)**92**:0.05)**100**:0.10,(X:0.07,Y:0.04)**100**:0.2)_)
@@ -160,7 +171,7 @@ clades.
 3. Highly supported clades that are concordant are screened for
    discordance. All clades that are in conflict with each other are
    removed. This way all clades that are kept are non-discordant.
-   
+
 This produces a tree that has clades that are both concordant and
 non-discordant across the single locus phylogenies. The support value
 for each of the clades is the number of single locus phylogenies
@@ -203,6 +214,20 @@ subdivision. This result contains potential phylogenetic species.
 Check whether you get the same result if you set discordance threshold to
 1 (`-count=1`).
 
+> Using `1` as discordance threshold, may prove to be overly conservative:
+> the analysis is, basically, the same as the non-discordance analysis
+> of the GCPSR method of
+> [Dettman _et al._ (2003)](http://dx.doi.org/10.1554/03-073). An alternative
+> option could be using `2`; which would ignore groupings supported by only one
+> single-locus phylogeny.
+>
+> The reasoning behind using `2` as discordance threshold is that some loci
+> are probably contradicting the general trend in  the  genome,  but
+> this does not necessarily suggest that the two groups are not genetically
+> isolated. However, multiple (>1) single-locus phylogenies showing the same
+> grouping should be taken as a possibly significant deviation from the
+> genetically isolated population hypothesis.
+
 If not, then you have gene trees that contradict the general
 trend/pattern in your data set (gene tree forest). These should be
 identified. To do this, use the following command (this assumes that
@@ -236,17 +261,24 @@ If all conflicting trees could be reasoned away, then run the analysis
 once again on the trees that are kept with `-count=1` for the first
 step. For the second script use `-count=<int>` where `<int>` should be
 a number representing the majority of single locus gene trees used
-(e.g. 6 out of 10, so `-count=6`).
+(e.g. 5 out of 9, so `-count=5`).
 
 > This last part on the majority of loci supporting the separation,
 > assumes that all the loci used for this analysis are relatively
 > informative, which is not always the case.
+>
+> The concordance threshold could be adjusted so that it corresponds to
+> a number representing the majority of phylogenetically informative loci.
+> Where phylogenetically informative refers to how rich a given locus is in
+> parsimony informative sites.
+
 
 The final result contains the phylogenetic species identified in your
 data set.
 
+## Citation
 
-## Theory behind this method
+If you are using these scripts for a publication, then, please, cite the
+[paper](https://doi.org/10.1186/s12864-017-4116-5) introducing the scripts:
 
-You can read more about the underlying theory in the [md/theory.md](md/theory.md)
-file.
+[Brankovics, B., van Dam, P., Rep, M.,  de Hoog, G.S., van der Lee, T.A.J., Waalwijk, C. and van Diepeningen, A.D. **Mitochondrial genomes reveal recombination in the presumed asexual _Fusarium oxysporum_ species complex.** _BMC Genomics_ (2017) 18: 735. doi: 10.1186/s12864-017-4116-5](https://doi.org/10.1186/s12864-017-4116-5)
